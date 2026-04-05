@@ -1,0 +1,66 @@
+{
+  "name": "@cyguin/feedback",
+  "version": "0.1.0",
+  "description": "Drop-in user feedback widget for Next.js \u2014 thumbs, rating, or text",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cyguin/feedback"
+  },
+  "type": "module",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    },
+    "./server": {
+      "import": "./dist/server.js",
+      "types": "./dist/server.d.ts"
+    },
+    "./react": {
+      "import": "./dist/components/index.js",
+      "types": "./dist/components/index.d.ts"
+    },
+    "./adapters/in-memory": {
+      "import": "./dist/adapters/in-memory.js",
+      "types": "./dist/adapters/in-memory.d.ts"
+    },
+    "./adapters/supabase": {
+      "import": "./dist/adapters/supabase.js",
+      "types": "./dist/adapters/supabase.d.ts"
+    }
+  },
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch"
+  },
+  "peerDependencies": {
+    "next": ">=14",
+    "react": ">=18"
+  },
+  "peerDependenciesMeta": {
+    "@supabase/supabase-js": {
+      "optional": true
+    },
+    "next": {
+      "optional": true
+    },
+    "react": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@supabase/supabase-js": "^2.0.0",
+    "@types/node": "^20.0.0",
+    "@types/react": "^18.0.0",
+    "next": "^14.0.0",
+    "react": "^18.3.1",
+    "tsup": "^8.3.0",
+    "typescript": "^5.5.0"
+  },
+  "dependencies": {
+    "nanoid": "^5.0.7"
+  }
+}
