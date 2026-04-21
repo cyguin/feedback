@@ -3,7 +3,7 @@ import type { FeedbackAdapter, FeedbackType } from '../types.js';
 
 interface HandlerOptions {
   adapter: FeedbackAdapter;
-  secret: string;
+  secret?: string;
 }
 
 function parseJsonBody<T>(req: NextRequest): Promise<T> {
@@ -13,6 +13,18 @@ function parseJsonBody<T>(req: NextRequest): Promise<T> {
 function bearerToken(req: NextRequest, secret: string): boolean {
   const auth = req.headers.get('Authorization') ?? '';
   return auth === `Bearer ${secret}`;
+}
+
+function requireAdmin(req: NextRequest, secret?: string): NextResponse | null {
+  if (!secret) {
+    return NextResponse.json({ error: 'Feedback secret is not configured' }, { status: 500 });
+  }
+
+  if (!bearerToken(req, secret)) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  return null;
 }
 
 export function createFeedbackHandler({ adapter, secret }: HandlerOptions) {
@@ -30,9 +42,8 @@ export function createFeedbackHandler({ adapter, secret }: HandlerOptions) {
 
     try {
       if (req.method === 'GET') {
-        if (!bearerToken(req, secret)) {
-          return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-        }
+        const authError = requireAdmin(req, secret);
+        if (authError) return authError;
 
         const urlParam = url.searchParams.get('url') ?? undefined;
         const reviewedParam = url.searchParams.get('reviewed');
@@ -49,10 +60,6 @@ export function createFeedbackHandler({ adapter, secret }: HandlerOptions) {
       }
 
       if (req.method === 'POST') {
-        if (!bearerToken(req, secret)) {
-          return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-        }
-
         const body = await parseJsonBody<{
           type: FeedbackType;
           body: string;
@@ -78,9 +85,8 @@ export function createFeedbackHandler({ adapter, secret }: HandlerOptions) {
       }
 
       if (req.method === 'PATCH') {
-        if (!bearerToken(req, secret)) {
-          return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-        }
+        const authError = requireAdmin(req, secret);
+        if (authError) return authError;
 
         if (remaining.length < 1) {
           return NextResponse.json({ error: 'id is required' }, { status: 400 });
@@ -93,8 +99,8 @@ export function createFeedbackHandler({ adapter, secret }: HandlerOptions) {
 
       return NextResponse.json({ error: 'Method not allowed' }, { status: 405 });
     } catch (err) {
-      const message = err instanceof Error ? err.message : 'Unknown error';
-      return NextResponse.json({ error: message }, { status: 500 });
+      console.error('Feedback handler error:', err);
+      return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
     }
   };
 }

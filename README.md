@@ -19,7 +19,10 @@ import { createFeedbackHandler } from '@cyguin/feedback/server';
 import { createInMemoryAdapter } from '@cyguin/feedback/adapters/in-memory';
 
 const adapter = createInMemoryAdapter();
-const handler = createFeedbackHandler({ adapter });
+const handler = createFeedbackHandler({
+  adapter,
+  secret: process.env.FEEDBACK_SECRET,
+});
 
 export { handler as GET, handler as POST, handler as PATCH };
 ```
@@ -31,7 +34,10 @@ import { createFeedbackHandler } from '@cyguin/feedback/server';
 import { createSupabaseAdapter } from '@cyguin/feedback/adapters/supabase';
 
 const adapter = createSupabaseAdapter(supabaseClient);
-const handler = createFeedbackHandler({ adapter });
+const handler = createFeedbackHandler({
+  adapter,
+  secret: process.env.FEEDBACK_SECRET,
+});
 
 export { handler as GET, handler as POST, handler as PATCH };
 ```
@@ -121,14 +127,14 @@ const handler = createFeedbackHandler({
 export { handler as GET, handler as POST, handler as PATCH };
 ```
 
-Required environment variable: `FEEDBACK_SECRET` — Bearer token for admin API access.
+Required environment variable for admin routes: `FEEDBACK_SECRET` — Bearer token for listing and reviewing feedback. Public feedback submission does not use this token.
 
 ## API Routes
 
 | Method | Route | Description |
 |--------|-------|-------------|
 | GET | `/api/feedback` | List feedback (admin, requires Bearer token) |
-| POST | `/api/feedback` | Submit new feedback |
+| POST | `/api/feedback` | Submit new feedback (public widget endpoint) |
 | PATCH | `/api/feedback/:id/reviewed` | Toggle reviewed flag |
 
 ## License
