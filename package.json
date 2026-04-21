@@ -1,6 +1,6 @@
 {
   "name": "@cyguin/feedback",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "description": "Drop-in user feedback widget for Next.js — thumbs, rating, or text",
   "license": "MIT",
   "keywords": [

@@ -75,6 +75,8 @@ All three modes submit to your API and show a "Thanks for your feedback!" messag
 
 ## Theming
 
+`FeedbackWidget` defaults to the cyguin dark theme. Pass `theme="light"` to opt into the light theme.
+
 Use `--cyguin-*` CSS custom properties on a parent element or `:root`:
 
 ```css
@@ -93,10 +95,10 @@ Use `--cyguin-*` CSS custom properties on a parent element or `:root`:
 }
 ```
 
-Switch to dark theme with the `theme` prop:
+Switch to light theme with the `theme` prop:
 
 ```tsx
-<FeedbackWidget type="thumbs" theme="dark" />
+<FeedbackWidget type="thumbs" theme="light" />
 ```
 
 Dark theme applies these overrides automatically:
