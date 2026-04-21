@@ -66,7 +66,7 @@ export function FeedbackWidget({
   type,
   url: urlProp,
   userId,
-  theme = 'light',
+  theme = 'dark',
   className = '',
   onSubmit,
   maxStars = 5,
