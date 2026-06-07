@@ -1,3 +1,4 @@
+import { timingSafeEqual } from 'node:crypto';
 import { NextRequest, NextResponse } from 'next/server';
 import type { FeedbackAdapter, FeedbackType } from '../types.js';
 
@@ -11,8 +12,10 @@ function parseJsonBody<T>(req: NextRequest): Promise<T> {
 }
 
 function bearerToken(req: NextRequest, secret: string): boolean {
-  const auth = req.headers.get('Authorization') ?? '';
-  return auth === `Bearer ${secret}`;
+  const auth = req.headers.get('Authorization');
+  const expected = `Bearer ${secret}`;
+  if (!auth || auth.length !== expected.length) return false;
+  return timingSafeEqual(Buffer.from(auth), Buffer.from(expected));
 }
 
 function requireAdmin(req: NextRequest, secret?: string): NextResponse | null {
