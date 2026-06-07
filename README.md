@@ -1,6 +1,6 @@
 # @cyguin/feedback
 
-Drop-in user feedback widget for Next.js — capture thumbs, star ratings, or free-text feedback from inside any page.
+Drop-in feedback widget for Next.js. Thumbs, stars, or free text — capture it from any page.
 
 ## Install
 
@@ -12,7 +12,7 @@ npm install @cyguin/feedback
 
 ### 1. Create the API route
 
-Create `app/api/feedback/[...cyguin]/route.ts` in your Next.js app:
+`app/api/feedback/[...cyguin]/route.ts`:
 
 ```ts
 import { createFeedbackHandler } from '@cyguin/feedback/server';
@@ -64,20 +64,18 @@ import { FeedbackWidget } from '@cyguin/feedback/react';
 // Thumbs mode
 <FeedbackWidget type="thumbs" />
 
-// Star rating mode (default 5 stars)
+// Star rating (default 5 stars)
 <FeedbackWidget type="rating" maxStars={5} />
 
-// Free text mode
+// Free text
 <FeedbackWidget type="text" placeholder="Share your feedback..." />
 ```
 
-All three modes submit to your API and show a "Thanks for your feedback!" message for 3 seconds.
+All three modes submit to your API and show a "Thanks for your feedback!" confirmation for 3 seconds.
 
 ## Theming
 
-`FeedbackWidget` defaults to the cyguin dark theme. Pass `theme="light"` to opt into the light theme.
-
-Use `--cyguin-*` CSS custom properties on a parent element or `:root`:
+The widget is dark by default. Use `theme="light"` to swap. Override `--cyguin-*` variables on `.feedback-widget`:
 
 ```css
 .feedback-widget {
@@ -95,13 +93,7 @@ Use `--cyguin-*` CSS custom properties on a parent element or `:root`:
 }
 ```
 
-Switch to light theme with the `theme` prop:
-
-```tsx
-<FeedbackWidget type="thumbs" theme="light" />
-```
-
-Dark theme applies these overrides automatically:
+In dark mode these swap automatically:
 
 ```css
 --cyguin-bg: #0a0a0a;
@@ -129,14 +121,14 @@ const handler = createFeedbackHandler({
 export { handler as GET, handler as POST, handler as PATCH };
 ```
 
-Required environment variable for admin routes: `FEEDBACK_SECRET` — Bearer token for listing and reviewing feedback. Public feedback submission does not use this token.
+Admin routes need `FEEDBACK_SECRET` — a Bearer token for listing and reviewing feedback. Public submission doesn't use it.
 
 ## API Routes
 
 | Method | Route | Description |
 |--------|-------|-------------|
-| GET | `/api/feedback` | List feedback (admin, requires Bearer token) |
-| POST | `/api/feedback` | Submit new feedback (public widget endpoint) |
+| GET | `/api/feedback` | List feedback (admin, Bearer token required) |
+| POST | `/api/feedback` | Submit feedback (public) |
 | PATCH | `/api/feedback/:id/reviewed` | Toggle reviewed flag |
 
 ## License
